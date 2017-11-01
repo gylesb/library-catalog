@@ -171,60 +171,57 @@ namespace LibraryCatalog.Models
       return books;
     }
 
-    // public List<Course> GetAvailableCourses()
-    // {
-    //   MySqlConnection conn = DB.Connection();
-    //   conn.Open();
-    //   var cmd = conn.CreateCommand() as MySqlCommand;
-    //   cmd.CommandText = @"SELECT course_id FROM courses WHERE student_id = @studentId;";
-    //
-    //   MySqlParameter studentIdParameter = new MySqlParameter();
-    //   studentIdParameter.ParameterName = "@studentId";
-    //   studentIdParameter.Value = _id;
-    //   cmd.Parameters.Add(studentIdParameter);
-    //
-    //   var rdr = cmd.ExecuteReader() as MySqlDataReader;
-    //
-    //   List<int> courseIds = new List<int> {};
-    //   while(rdr.Read())
-    //   {
-    //     int courseId = rdr.GetInt32(0);
-    //     courseIds.Add(courseId);
-    //   }
-    //   rdr.Dispose();
-    //
-    //   List<Course> courses = new List<Course> {};
-    //   foreach (int courseId in courseIds)
-    //   {
-    //     var courseQuery = conn.CreateCommand() as MySqlCommand;
-    //     courseQuery.CommandText = @"SELECT * FROM courses WHERE id = @CourseId;";
-    //
-    //     MySqlParameter courseIdParameter = new MySqlParameter();
-    //     courseIdParameter.ParameterName = "@CourseId";
-    //     courseIdParameter.Value = courseId;
-    //     courseQuery.Parameters.Add(courseIdParameter);
-    //
-    //     var courseQueryRdr = courseQuery.ExecuteReader() as MySqlDataReader;
-    //     while(courseQueryRdr.Read())
-    //     {
-    //       int thisCourseId = courseQueryRdr.GetInt32(0);
-    //       string courseName = courseQueryRdr.GetString(1);
-    //       string courseNumber = courseQueryRdr.GetString(2);
-    //       Course foundCourse = new Course(courseName, courseNumber, thisCourseId);
-    //       courses.Add(foundCourse);
-    //     }
-    //     courseQueryRdr.Dispose();
-    //   }
-    //   conn.Close();
-    //   if (conn != null)
-    //   {
-    //     conn.Dispose();
-    //   }
-    //   return courses;
-    // }
-    //
-    //
-    //
+    public List<Book> GetAvailableBooks()
+    {
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+      var cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"SELECT course_id FROM courses WHERE student_id = @studentId;";
+
+      MySqlParameter studentIdParameter = new MySqlParameter();
+      studentIdParameter.ParameterName = "@studentId";
+      studentIdParameter.Value = _id;
+      cmd.Parameters.Add(studentIdParameter);
+
+      var rdr = cmd.ExecuteReader() as MySqlDataReader;
+
+      List<int> courseIds = new List<int> {};
+      while(rdr.Read())
+      {
+        int courseId = rdr.GetInt32(0);
+        courseIds.Add(courseId);
+      }
+      rdr.Dispose();
+
+      List<Book> books = new List<Book> {};
+      foreach (int bookId in bookIds)
+      {
+        var bookQuery = conn.CreateCommand() as MySqlCommand;
+        bookQuery.CommandText = @"SELECT * FROM books WHERE id = @BookId;";
+
+        MySqlParameter bookIdParameter = new MySqlParameter();
+        bookIdParameter.ParameterName = "@BookId";
+        bookIdParameter.Value = bookId;
+        bookQuery.Parameters.Add(bookIdParameter);
+
+        var bookQueryRdr = bookQuery.ExecuteReader() as MySqlDataReader;
+        while(bookQueryRdr.Read())
+        {
+          int thisBookId = bookQueryRdr.GetInt32(0);
+          string bookName = bookQueryRdr.GetString(1);
+          string bookNumber = bookQueryRdr.GetString(2);
+          Book foundBook = new Book(bookName, bookNumber, thisBookId);
+          books.Add(foundBook);
+        }
+        bookQueryRdr.Dispose();
+      }
+      conn.Close();
+      if (conn != null)
+      {
+        conn.Dispose();
+      }
+      return books;
+    }
     // public static List<Student> GetAll()
     // {
     //   List<Student> allStudents = new List<Student> {};
