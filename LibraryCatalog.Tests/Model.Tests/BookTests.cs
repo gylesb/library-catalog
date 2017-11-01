@@ -43,5 +43,57 @@ namespace LibraryCatalog.TestTools
       //Assert
       CollectionAssert.AreEqual(testList, result);
     }
+
+    [TestMethod]
+    public void Save_DatabaseAssignsIdToTitle_Id()
+    {
+      //Arrange
+      Book testBook = new Book("White Like Me", "Tim Wise");
+      testBook.Save();
+
+      //Act
+      Book savedBook = Book.GetAll()[0];
+
+      int result = savedBook.GetId();
+      int testId = testBook.GetId();
+
+      //Assert
+      Assert.AreEqual(testId, result);
+    }
+
+    [TestMethod]
+    public void Find_FindsBookInDatabase_Book()
+    {
+      //Arrange
+      Book testBook = new Book("White Like Me", "Tim Wise");
+      testBook.Save();
+
+      //Act
+      Book foundBook = Book.Find(testBook.GetId());
+
+      //Assert
+      Assert.AreEqual(testBook, foundBook);
+    }
+
+    [TestMethod]
+    public void Delete_DeletesCourseAssociationsFromDatabase_BookList()
+    {
+      //Arrange
+      Copy testCopy = new Copy("White Like Me", 6);
+      testCopy.Save();
+
+      Book testBook = new Book("White Like Me", "Tim Wise");
+      testBook.Save();
+
+      //Act
+      testBook.AddCopy(testCopy);
+      testBook.Delete();
+
+      List<Book> resultCopyBooks = testCopy.GetBooks();
+      List<Book> testCopyBooks = new List<Book> {};
+
+      //Assert
+      CollectionAssert.AreEqual(testCopyBooks, resultCopyBooks;)
+    }
   }
 }

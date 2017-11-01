@@ -85,10 +85,10 @@ namespace LibraryCatalog.Models
       var cmd = conn.CreateCommand() as MySqlCommand;
       cmd.CommandText = @"INSERT INTO library (title, author) VALUES (@title, @author);";
 
-      MySqlParameter title = new MySqlParameter();
-      title.ParameterName = "@title";
-      title.Value = this._title;
-      cmd.Parameters.Add(title);
+      MySqlParameter bookTitle = new MySqlParameter();
+      bookTitle.ParameterName = "@bookTitle";
+      bookTitle.Value = this._title;
+      cmd.Parameters.Add(bookTitle);
 
       MySqlParameter bookAuthor = new MySqlParameter();
       bookAuthor.ParameterName = "@bookAuthor";
@@ -138,6 +138,56 @@ namespace LibraryCatalog.Models
         conn.Dispose();
       }
       return newBook;
+    }
+
+    public void AddCopy(Copy newCopy)
+    {
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+
+      var cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"INSERT INTO library_copies (title_id, author_id, copies_id) VALUES (@TitleId, @AuthorId, @CopiesId);";
+
+      MySqlParameter title_id = new MySqlParameter();
+      title_id.ParameterName = "@TitleId";
+      title_id.Value = _id;
+      cmd.Parameters.Add(title_id);
+
+      MySqlParameter author_id = new MySqlParameter();
+      author_id.ParameterName = "@AuthorId";
+      author_id.Value = _id;
+      cmd.Parameters.Add(author_id);
+
+      MySqlParameter copies_id = new MySqlParameter();
+      copies_id.ParameterName = "@CopiesId";
+      copies_id.Value = _id;
+      cmd.Parameters.Add(copies_id);
+
+      cmd.ExecuteNonQuery();
+      conn.Close();
+      if (conn != null)
+      {
+        conn.Dispose();
+      }
+    }
+
+    public void Delete()
+    {
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+
+      MySqlCommand cmd = new MySqlCommand("DELETE FROM library WHERE id = @CopiesId; DELETE FROM copies WHERE copies_id = @CopiesId;", conn);
+      MySqlParameter copiesIdParameter = new MySqlParameter();
+      copiesIdParameter.ParameterName = "@CopiesId";
+      copiesIdParameter.Value = this.GetId();
+
+      cmd.Parameters.Add(copiesIdParameter);
+      cmd.ExecuteNonQuery();
+
+      if (conn != null)
+      {
+        conn.Close();
+      }
     }
 
     public static void DeleteAll()
