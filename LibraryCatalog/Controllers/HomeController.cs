@@ -24,7 +24,7 @@ namespace LibraryCatalog.Controllers
     public ActionResult ViewBooks(int id)
     {
       Dictionary<string, object> model = new Dictionary<string, object>();
-      Book newBook = new Book(Request.Form["book-title"], Int32.Parse(Request.Form["book-copies"]);
+      Book newBook = new Book(Request.Form["book-title"], Int32.Parse(Request.Form["book-copies"]));
 
       int authorValue = Int32.Parse(Request.Form["number-loop"]);
       for(var i=1;i<=authorValue;i++)
