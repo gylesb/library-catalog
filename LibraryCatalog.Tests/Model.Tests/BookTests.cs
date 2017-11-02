@@ -79,7 +79,7 @@ namespace LibraryCatalog.TestTools
     public void Delete_DeletesCourseAssociationsFromDatabase_BookList()
     {
       //Arrange
-      Copy testCopy = new Copy("White Like Me", 6);
+      Copy testCopy = new Copy(6, 8);
       testCopy.Save();
 
       Book testBook = new Book("White Like Me", "Tim Wise");
@@ -89,11 +89,11 @@ namespace LibraryCatalog.TestTools
       testBook.AddCopy(testCopy);
       testBook.Delete();
 
-      List<Book> resultCopyBooks = testCopy.GetBooks();
+      List<Book> resultCopyBooks = testCopy.GetBook();
       List<Book> testCopyBooks = new List<Book> {};
 
       //Assert
-      CollectionAssert.AreEqual(testCopyBooks, resultCopyBooks;)
+      CollectionAssert.AreEqual(testCopyBooks, resultCopyBooks);
     }
   }
 }

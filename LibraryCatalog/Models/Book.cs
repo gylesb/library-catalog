@@ -7,13 +7,13 @@ namespace LibraryCatalog.Models
   public class Book
   {
     private string _title;
-    private string _author;
+    private int _copies;
     private int _id;
 
-    public Book(string title, string author, int id = 0)
+    public Book(string title, int copies, int id = 0)
     {
       _title = title;
-      _author = author;
+      _copies = copies;
       _id = id;
     }
 
@@ -40,9 +40,9 @@ namespace LibraryCatalog.Models
       return _title;
     }
 
-    public string GetBookAuthor()
+    public int GetBookCopies()
     {
-      return _author;
+      return _copies;
     }
 
     public int GetId()
@@ -64,9 +64,9 @@ namespace LibraryCatalog.Models
       {
         int BookId = rdr.GetInt32(0);
         string BookTitle = rdr.GetString(1);
-        string BookAuthor = rdr.GetString(2);
+        int BookCopies = rdr.GetInt32(2);
 
-        Book newBook = new Book(BookTitle, BookAuthor, BookId);
+        Book newBook = new Book(BookTitle, BookCopies, BookId);
         allBooks.Add(newBook);
       }
       conn.Close();
@@ -83,17 +83,17 @@ namespace LibraryCatalog.Models
       conn.Open();
 
       var cmd = conn.CreateCommand() as MySqlCommand;
-      cmd.CommandText = @"INSERT INTO library (title, author) VALUES (@title, @author);";
+      cmd.CommandText = @"INSERT INTO library (title, copies) VALUES (@title, @copies);";
 
       MySqlParameter bookTitle = new MySqlParameter();
       bookTitle.ParameterName = "@bookTitle";
       bookTitle.Value = this._title;
       cmd.Parameters.Add(bookTitle);
 
-      MySqlParameter bookAuthor = new MySqlParameter();
-      bookAuthor.ParameterName = "@bookAuthor";
-      bookAuthor.Value = this._author;
-      cmd.Parameters.Add(bookAuthor);
+      MySqlParameter bookCopy = new MySqlParameter();
+      bookCopy.ParameterName = "@bookCopy";
+      bookCopy.Value = this._copies;
+      cmd.Parameters.Add(bookCopy);
 
       cmd.ExecuteNonQuery();
       _id = (int) cmd.LastInsertedId;
@@ -121,16 +121,16 @@ namespace LibraryCatalog.Models
       var rdr = cmd.ExecuteReader() as MySqlDataReader;
       int BookId = 0;
       string BookTitle = "";
-      string BookAuthor = "";
+      int BookCopy = 0;
 
       while (rdr.Read())
       {
         BookId = rdr.GetInt32(0);
         BookTitle = rdr.GetString(1);
-        BookAuthor = rdr.GetString(2);
+        BookCopy = rdr.GetInt32(2);
       }
 
-      Book newBook = new Book(BookTitle, BookAuthor);
+      Book newBook = new Book(BookTitle, BookCopy, BookId);
       conn.Close();
 
       if (conn != null)
@@ -146,17 +146,12 @@ namespace LibraryCatalog.Models
       conn.Open();
 
       var cmd = conn.CreateCommand() as MySqlCommand;
-      cmd.CommandText = @"INSERT INTO library_copies (title_id, author_id, copies_id) VALUES (@TitleId, @AuthorId, @CopiesId);";
+      cmd.CommandText = @"INSERT INTO library_copies (title_id, copies_id) VALUES (@TitleId,@CopiesId);";
 
       MySqlParameter title_id = new MySqlParameter();
       title_id.ParameterName = "@TitleId";
       title_id.Value = _id;
       cmd.Parameters.Add(title_id);
-
-      MySqlParameter author_id = new MySqlParameter();
-      author_id.ParameterName = "@AuthorId";
-      author_id.Value = _id;
-      cmd.Parameters.Add(author_id);
 
       MySqlParameter copies_id = new MySqlParameter();
       copies_id.ParameterName = "@CopiesId";
