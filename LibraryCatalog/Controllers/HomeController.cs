@@ -29,7 +29,7 @@ namespace LibraryCatalog.Controllers
       int authorValue = Int32.Parse(Request.Form["number-loop"]);
       for(var i=1;i<=authorValue;i++)
       {
-        Author newAuthor = new Author(Request.Form["author-name"+i])
+        Author newAuthor = new Author(Request.Form["author-name"+i]);
         if(newAuthor.IsNewAuthor() == true)
         {
           newAuthor.Save();
